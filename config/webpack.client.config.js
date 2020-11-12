@@ -61,7 +61,6 @@ module.exports = smp.wrap(merge(baseConfig, {
           'css-loader',
           'postcss-loader',
           'sass-loader',
-          path.resolve(__dirname, '../loader/index.js')
         ]
         // use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },

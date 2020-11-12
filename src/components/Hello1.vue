@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import head from '../util/util.js'
 export default {
   asyncData: ({ store }) => {
     return store.dispatch('getDataAction')
@@ -17,7 +18,9 @@ export default {
     }
   },
   created() {
+    // console.log(process.env.NODE_ENV)
     // console.log(window)
+    head(['1', '2', '3'])
   }
 }
 </script>

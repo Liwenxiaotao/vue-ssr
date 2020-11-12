@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { createApp } from './app'
+import { createApp } from './app.js'
 
 // 这种方法比较好，注意路由跳转的组件也可能要预期数据
 Vue.mixin({
