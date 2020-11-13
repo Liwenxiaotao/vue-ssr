@@ -1,0 +1,6 @@
+# git 钩子配置
+{
+  "hooks": {
+    "pre-commit": "npm run lint"
+  }
+}
