@@ -1,6 +1,6 @@
 import head from './util/util.js'
 
-const div =  document.createElement('div');
+const div = document.createElement('div')
 div.style.color = '#f00'
 div.innerHTML = head('hello'.split(''))
 document.body.appendChild(div)

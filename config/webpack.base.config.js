@@ -15,8 +15,9 @@ module.exports = {
   mode: isProd ? 'production' : 'development',
   output: {
     path: resolve('dist'),
-    publicPath: isProd ? '/' : '/',   // 生产环境指定cdn
-    filename: '[name].[hash].js'
+    publicPath: isProd ? 'www.cdn.com/' : '/',   // 生产环境指定cdn
+    filename: '[name].[hash:6].js', // 同步加载的文件名
+    chunkFilename: '[name].[contenthash:8].js' // 按需加载的文件名
   },
   resolve: {
     alias: {   // 优化3：设置别名
@@ -32,7 +33,7 @@ module.exports = {
     // }
   },
   module: {
-    noParse: /es6-promise\.js$/, // avoid webpack shimming process
+    noParse: /es6-promise\.js$/, // avoid webpack shimming process  不解析的模块
     rules: [
       {
         test: /\.vue$/,

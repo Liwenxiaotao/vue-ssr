@@ -43,7 +43,7 @@ let config = merge(baseConfig, {
     app2: path.resolve(__dirname, '../src/app2.js')
   },
   optimization: {
-    // 多进程压缩(会报错)
+    // 多进程压缩(会报错)   生产环境默认开启，使用terser压缩
     // minimizer:[new UglifyJsPlugin({
     //   parallel: true,
     //   // parallel: os.cpus().length
@@ -58,7 +58,7 @@ let config = merge(baseConfig, {
           minChunks: 1, // 引用最少次数
         },
         vendors:{  // node_modules的包打到一起
-          test: /node_modules/,
+          test: /[\\]node_modules[\\]/,
           name: "vendors", // chunk名称
           minChunks: 1, // 引用最少次数
           priority: 2, // 数值越大，权重越大，优先抽离
@@ -70,20 +70,32 @@ let config = merge(baseConfig, {
           priority: 1,
           chunks: 'all',
           minSize: 0,  // 文件大小,单位子节
+          test: /[\\/]src[\\/]/
         }
       },
     },
     runtimeChunk: {   // 会创建一个在所有生成 chunk 之间共享的运行时文件
       name: 'runtime'
     },
-    concatenateModules: true  // 优化： 作用域提升（scope hoisting） 尽量将文件打到同个函数导出
+    concatenateModules: true  // 优化： 作用域提升（scope hoisting） 尽量将文件打到同个函数导出，生产自动使用
   },
-  devtool: isProd ? "none" : "cheap-module-eval-source-map",  // 开发时开启
+  devtool: "hidden-source-map",//isProd ? "none" : "cheap-module-eval-source-map",  // 开发时开启
   devServer: {
-    open: true,
+    open: true,  // 自动打开浏览器
+    progress: true, // 显示打包进度条
+    // contentBase: './dist', // 根目录
+    compress: true, // 开启gzip压缩
     // 代理
     proxy: {
-      "/api": "http:127.0.0.1:8888"
+      "/api": "http:127.0.0.1:8888",  // 将/api/xxx代理到http:127.0.0.1:8888/api/xxx
+      '/hello1': {           // 重写路径 将/api/xxx代理到http:127.0.0.1:8888/xxx
+        target: 'http://localhost:8081',
+        pathRewrite: {'^/api' : ''}
+      },
+      // proxy: [{
+      //   context: ["/auth", "/api"],  多个路径代理到同个连接
+      //   target: "http://localhost:3000",
+      // }]
     },
     // 请求前钩子
     before(app, server) {
@@ -102,6 +114,11 @@ let config = merge(baseConfig, {
   },
   module: {
     rules: [
+      {
+        test: /\.(vue|js)$/,
+        loader: "eslint-loader",
+        enforce: "pre"  // 预处理，在其他loader处理前处理
+      },
       {
         test: /\.css$/,
         use: [
@@ -172,7 +189,7 @@ if (isProd) {
     new OptimizeCssAssetsPlugin({
       cssProcessor: require('cssnano'), // 引入cssnano压缩
       cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }],
+        preset: ['default', { discardComments: { removeAll: true } }],  // 删除注释
       },
       canPrint: true
     }),
@@ -183,26 +200,26 @@ if (isProd) {
     //     // resolve('./src/*.vue'),
     //   ])
     // }),
-    new ParallelUglifyPlugin({ // 并行压缩输出的js代码
-      // 传递给uglify的参数（还是使用UglifyJs压缩，只不过帮助开启了多进程）
-      exclude: [/vendors\..*\.js$/],
-      uglifyJS: {
-        output: {
-          beautify: false, // 最紧凑的输出
-          comments: false, // 删除所有注释
-        },
-        compress: {
-          // 删除所有的console语句，可以兼容ie浏览器
-          drop_console: true,
-          // 内嵌定义了但是只用到一次的变量
-          collapse_vars: true,
-          // 提取出现多次但是没有定义成变量去引用的静态值
-          reduce_vars: true,
-          // 是否在UglifyJS删除没有用到的代码时输出警告信息，默认为输出，可以设置为false关闭这些作用不大的警告
-          //warnings: false,
-        }
-      }
-    }),
+    // new ParallelUglifyPlugin({ // 并行压缩输出的js代码 // 会和source-map-explorer冲突
+    //   // 传递给uglify的参数（还是使用UglifyJs压缩，只不过帮助开启了多进程）
+    //   exclude: [/vendors\..*\.js$/],
+    //   uglifyJS: {
+    //     output: {
+    //       beautify: false, // 最紧凑的输出
+    //       comments: false, // 删除所有注释
+    //     },
+    //     compress: {
+    //       // 删除所有的console语句，可以兼容ie浏览器
+    //       drop_console: true,
+    //       // 内嵌定义了但是只用到一次的变量
+    //       collapse_vars: true,
+    //       // 提取出现多次但是没有定义成变量去引用的静态值
+    //       reduce_vars: true,
+    //       // 是否在UglifyJS删除没有用到的代码时输出警告信息，默认为输出，可以设置为false关闭这些作用不大的警告
+    //       //warnings: false,
+    //     }
+    //   }
+    // }),
   ]),
   config = smp.wrap(config)
 } else {
@@ -210,7 +227,7 @@ if (isProd) {
     // MiniCssExtractPlugin与热更新有冲突，会让css样式修改热更新失效
     config.plugins = config.plugins.concat(
       [
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin(), // 热更新不触发js代码，需要自己在代码写
         new HardSourceWebpackPlugin(), //放在生产的配置会报错（问题有待确认）时间短时反而热更新更慢
       ]
     )

@@ -8,7 +8,7 @@ const getData = () => new Promise((resolve) => {
       {
         id: 2,
         item: 'hello2'
-      },
+      }
     ])
   }, 2000)
 })

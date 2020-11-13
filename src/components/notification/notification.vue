@@ -1,4 +1,3 @@
-<!--  -->
 <template>
   <transition name="fade" @after-leave="afterLeave" @after-enter="afterEnter">
     <div class="notification" :style="style" v-show="visilable" @mouseenter="clearTimer" @mouseleave="createTimer">
@@ -10,7 +9,7 @@
 
 <script>
 export default {
-  name:'Notification',
+  name: 'Notification',
   props: {
     content: {
       type: String,
@@ -37,7 +36,7 @@ export default {
   mounted() {},
   methods: {
     handleClose(e) {
-      e.preventDefault();
+      e.preventDefault()
       this.$emit('close')
     },
     afterLeave() {

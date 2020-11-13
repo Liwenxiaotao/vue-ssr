@@ -14,7 +14,7 @@ export default {
       <div>
         {panel}
       </div>
-      )
-    }
+    )
   }
-  </script>
+}
+</script>

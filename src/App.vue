@@ -2,7 +2,6 @@
   <div id="app">
     <div>{{title}}</div>
     <router-view></router-view>
-    <!-- <notification content="aaaaaaaa"></notification> -->
     <button @click="notify">notify</button>
     <tabs :value="tabValue" @change="tapChange" ref="tabs">
       <tab label="tab1" index="1">
@@ -24,8 +23,8 @@
 
 export default {
   name: 'App',
-  data(){
-    return{
+  data() {
+    return {
       title: '服务端渲染',
       tabValue: '1',
       test: 'aa'
@@ -46,7 +45,7 @@ export default {
   methods: {
     notify() {
       this.$notify({
-        content: 'sadasdasdadas',
+        content: 'sadasdasdadas'
       })
     },
     tapChange(index) {

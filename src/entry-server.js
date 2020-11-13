@@ -14,7 +14,7 @@ export default context => {
     router.onReady(() => {
       const matchedComponents = router.getMatchedComponents()
       if (!matchedComponents.length) {
-        return reject({ code: 404 })
+        return reject(Error({ code: 404 }))
       }
 
       // 对所有匹配的路由组件调用 `asyncData()`
@@ -25,6 +25,7 @@ export default context => {
             route: router.currentRoute
           })
         }
+        return Promise.resolve()
       })).then(() => {
         // 在所有预取钩子(preFetch hook) resolve 后，
         // 我们的 store 现在已经填充入渲染应用程序所需的状态。

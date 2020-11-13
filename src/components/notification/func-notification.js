@@ -2,7 +2,7 @@ import Notification from './notification.vue'
 
 export default {
   extends: Notification,
-  data() {
+  data () {
     return {
       bottom: 0,
       autoClose: 3000,
@@ -12,32 +12,32 @@ export default {
     }
   },
   computed: {
-    style() {
+    style () {
       return {
         position: 'fixed',
         bottom: `${this.bottom}px`,
-        right: '16px',
+        right: '16px'
       }
     }
   },
-  mounted() {
+  mounted () {
     this.createTimer()
   },
   beforeDestroy () {
     this.clearTimer()
   },
   methods: {
-    createTimer() {
+    createTimer () {
       if (this.autoClose) {
         this.timer = setTimeout(() => {
           this.visilable = false
         }, this.autoClose)
       }
     },
-    clearTimer() {
+    clearTimer () {
       clearTimeout(this.timer)
     },
-    afterEnter() {
+    afterEnter () {
       this.height = this.$el.offsetHeight
       console.log(this.height)
     }

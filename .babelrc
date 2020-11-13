@@ -1,16 +1,28 @@
 {
-  "presets": [
+  "presets": [       // babel是个空壳，主要通过插件转换语法
     [
-      "@babel/preset-env",
+      "@babel/preset-env",  // 预设的插件集合，只解析语法，不解析api
       {
-        "modules": false,    // 配置了这个，babel就不会像默认那样转变成 require 形式。
+        "modules": false,    // 配置了这个，babel就不会像默认那样转变成 require 形式，保留es6模块语法。
         "useBuiltIns": "usage",  // polyfill按需引入
-        "corejs": 3
+        "corejs": 3,   // polyfill使用corejs3，兼容新的api  // @babel-polyfill(会污染全局，已弃用) 包含corejs和regenerator
+        // "target": {
+        //   "browsers": [">0.25"]   // 支持的浏览器
+        // }
       }
     ]
   ],
   "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-    "babel-plugin-transform-vue-jsx"
+    "@babel/plugin-syntax-dynamic-import",  // 支持import()语法
+    "babel-plugin-transform-vue-jsx",  // 解析vue中的jsx语法
+      [
+        "@babel/plugin-transform-runtime", {   // 重新取变量名
+          "absoluteRuntime": false,
+          "corejs": 3,
+          "helpers": true,
+          "regenerator": true,
+          "useESModules": false
+      }
+    ]
   ]
 }

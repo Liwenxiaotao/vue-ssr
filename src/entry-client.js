@@ -67,8 +67,8 @@ router.onReady(() => {
       if (c.asyncData) {
         return c.asyncData({ store, route: to })
       }
+      return Promise.resolve()
     })).then(() => {
-
       // 停止加载指示器(loading indicator)
 
       next()

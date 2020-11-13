@@ -16,7 +16,7 @@ export function createRouter () {
       {
         path: '/hello1',
         component: () => import(/* webpackChunkName: 'hello1' */'./components/Hello1.vue')
-      },
+      }
     ]
   })
 }

@@ -6,12 +6,12 @@ const instances = []
 let seed = 1
 
 const removeInstance = (instance) => {
-  if(!instance) return
+  if (!instance) return
   const index = instances.findIndex(item => instance.id === item.id)
   instances.splice(index, 1)
-  let len = instances.length
+  const len = instances.length
   if (len === 0) return
-  let removeHeight = instance.height
+  const removeHeight = instance.height
   for (let i = index; i < len; i++) {
     instances[i].bottom = instances[i].bottom - removeHeight - 16
   }
@@ -28,13 +28,13 @@ const notify = (option) => {
       ...res
     },
     data: {
-      autoClose: autoClose ? autoClose : 3000
+      autoClose: autoClose || 3000
     }
   })
   console.log(instance)
   const id = `notification_${seed++}`
   instance.id = id
-  instance.$mount()  // 生成dom节点
+  instance.$mount() // 生成dom节点
   document.body.appendChild(instance.$el)
   // 显示notification
   instance.visilable = true
@@ -45,12 +45,12 @@ const notify = (option) => {
   verticalOffset += 16
   instance.bottom = verticalOffset
   instances.push(instance)
-  instance.$on('closed', function() {
+  instance.$on('closed', function () {
     removeInstance(this)
     document.body.removeChild(this.$el)
     this.$destroy()
   })
-  instance.$on('close', function() {
+  instance.$on('close', function () {
     this.visilable = false
   })
   return instance
