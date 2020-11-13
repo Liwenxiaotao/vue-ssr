@@ -14,7 +14,7 @@
     "analyze": "source-map-explorer dist/*.js",
     "lint": "eslint --ext .js --ext .jsx --ext .vue src/",
     "lint:fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/",
-    "precommit": "lint"
+    "precommit": "npm run lint"
   },
   "keywords": [],
   "author": "",
